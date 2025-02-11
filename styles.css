@@ -1,0 +1,61 @@
+.board {
+    background-color: #E8C19C;
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Grid lines */
+.grid-line {
+    position: absolute;
+    background-color: #8b4513;
+}
+
+.vertical-line {
+    width: 2px;
+    height: 20px; /* Length of the vertical line segment */
+}
+
+.horizontal-line {
+    height: 2px;
+    width: 20px; /* Length of the horizontal line segment */
+}
+
+/* Palace X lines */
+.palace-x {
+    position: absolute;
+    width: 28px; /* Length of diagonal lines */
+    height: 28px; /* Height should match width */
+}
+
+.palace-x::before,
+.palace-x::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #8b4513;
+    top: 50%;
+    left: 0;
+    transform-origin: center;
+}
+
+.palace-x::before {
+    transform: rotate(45deg);
+}
+
+.palace-x::after {
+    transform: rotate(-45deg);
+}
+
+/* River text */
+.river {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #8b4513;
+} 

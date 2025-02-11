@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中國象棋</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+        }
+        .game-info {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .current-player {
+            color: #ff0000;  /* 默认红色先手 */
+        }
+        .current-player.black {
+            color: #000000;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        .controls button {
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        .controls button:hover {
+            background-color: #45a049;
+        }
+
+        /* 添加响应式样式 */
+        @media screen and (max-width: 1200px) {
+            canvas {
+                max-width: 90vw;
+                height: auto;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .game-info {
+                font-size: 20px;
+            }
+            canvas {
+                max-width: 95vw;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .game-info {
+                font-size: 16px;
+            }
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-info">
+            当前回合: <span class="current-player">红方</span>
+        </div>
+        <canvas id="chessboard"></canvas>
+        <div class="controls">
+            <button onclick="game.reset()">重新开始</button>
+        </div>
+    </div>
+    <script src="pieces.js"></script>
+    <script src="game.js"></script>
+</body>
+</html> 
