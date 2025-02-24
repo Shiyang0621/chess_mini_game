@@ -7,21 +7,20 @@ class ChineseChess {
     }
 
     init() {
-        // 将格子尺寸从 152px 调小到 80px
         this.cellSize = 80;
         
-        this.boardWidth = this.cellSize * 8;
-        this.boardHeight = this.cellSize * 8;
+        // Corrected board dimensions for 9x10 grid
+        this.boardWidth = this.cellSize * 8;  // 9 columns
+        this.boardHeight = this.cellSize * 9; // 10 rows
         
-        // 相应调小画布边距
         this.canvas.width = this.boardWidth + 100;
         this.canvas.height = this.boardHeight + 100;
         
         this.startX = (this.canvas.width - this.boardWidth) / 2;
         this.startY = (this.canvas.height - this.boardHeight) / 2;
         
-        this.lineWidth = 1;  // 线条也适当调细
-        this.crossSize = 5;  // 十字也调小
+        this.lineWidth = 1;
+        this.crossSize = 5;
         
         this.drawBoard();
     }
@@ -65,8 +64,8 @@ class ChineseChess {
             this.ctx.stroke();
         }
 
-        // 水平线，改为8条
-        for (let i = 0; i <= 8; i++) {
+        // 水平线，改为10条
+        for (let i = 0; i <= 9; i++) {
             const y = this.startY + i * this.cellSize;
             this.ctx.beginPath();
             this.ctx.moveTo(this.startX, y);
@@ -107,11 +106,12 @@ class ChineseChess {
     }
 
     drawRiver() {
-        // 河界区域
-        const riverY = this.startY + 4 * this.cellSize - 15;
-        const riverHeight = 30;
-        
-        this.ctx.fillStyle = '#fff';
+        // 计算"楚河汉界"区域的起始位置
+        const riverY = this.startY + 4 * this.cellSize;
+        const riverHeight = this.cellSize; // 使用一个格子的高度
+
+        // 绘制"楚河汉界"区域
+        this.ctx.fillStyle = '#E8C19C'; // 使用棋盘背景色
         this.ctx.fillRect(
             this.startX,
             riverY,
@@ -119,26 +119,23 @@ class ChineseChess {
             riverHeight
         );
 
-        // 文字
-        this.ctx.font = '20px SimHei';
+        // 绘制"楚河汉界"文字
+        this.ctx.font = `bold ${this.cellSize * 0.4}px SimHei`;
         this.ctx.fillStyle = '#000';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
-        
+
         const centerY = riverY + riverHeight / 2;
-        const spacing = this.cellSize * 2;
-        
-        this.ctx.fillText('楚', this.startX + 2 * this.cellSize, centerY);
-        this.ctx.fillText('河', this.startX + 3 * this.cellSize, centerY);
-        this.ctx.fillText('漢', this.startX + 5 * this.cellSize, centerY);
-        this.ctx.fillText('界', this.startX + 6 * this.cellSize, centerY);
+
+        this.ctx.fillText('楚河', this.startX + 2.5 * this.cellSize, centerY);
+        this.ctx.fillText('漢界', this.startX + 5.5 * this.cellSize, centerY);
     }
 
     drawPalaceLines() {
         // 上宫斜线
         this.drawPalaceX(3, 0);
         // 下宫斜线
-        this.drawPalaceX(3, 6);
+        this.drawPalaceX(3, 7);
     }
 
     drawPalaceX(startCol, startRow) {
