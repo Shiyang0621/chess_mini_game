@@ -148,22 +148,8 @@ window.ChessPieces = class ChessPieces {
         // General moves 1 space orthogonally and stays within the palace
         const dx = Math.abs(piece.x - toX);
         const dy = Math.abs(piece.y - toY);
-        if (dx + dy === 1) {
-            return toX >= 3 && toX <= 5 && (piece.color === 'red' ? toY >= 7 : toY <= 2);
-        }
-        // Check for "飞天将" rule
-        return this.canFlyGeneral(piece, toX, toY);
-    }
-
-    canFlyGeneral(piece, toX, toY) {
-        // Check if the move is a "飞天将" move
-        if (piece.x !== toX) return false; // Must be in the same column
-        const otherGeneral = piece.color === 'red' 
-            ? this.pieces.black.find(p => p.type === '將') 
-            : this.pieces.red.find(p => p.type === '帥');
-        if (!otherGeneral || otherGeneral.x !== toX) return false; // Other general must be in the same column
-        // Check if path is clear
-        return this.isPathClear(piece, otherGeneral.x, otherGeneral.y);
+        if (dx + dy !== 1) return false;
+        return toX >= 3 && toX <= 5 && (piece.color === 'red' ? toY >= 7 : toY <= 2);
     }
 
     canMoveCannon(piece, toX, toY) {
@@ -266,18 +252,24 @@ window.ChessPieces = class ChessPieces {
         const redGeneral = this.pieces.red.find(p => p.type === '帥');
         const blackGeneral = this.pieces.black.find(p => p.type === '將');
         if (!redGeneral) {
-            alert('黑方赢了!');
+            this.showWinMessage('黑方赢了!');
             this.endGame();
         } else if (!blackGeneral) {
-            alert('红方赢了!');
+            this.showWinMessage('红方赢了!');
             this.endGame();
         }
+    }
+
+    showWinMessage(message) {
+        const modal = document.getElementById('winModal');
+        const winMessage = document.getElementById('winMessage');
+        winMessage.textContent = message;
+        modal.style.display = 'block';
     }
 
     endGame() {
         // Disable further moves or interactions
         this.board.canvas.removeEventListener('click', this.handleClick);
-        // Optionally, you can add more logic to reset or restart the game
     }
 
     initPieces() {
@@ -365,4 +357,10 @@ window.ChessPieces = class ChessPieces {
             this.drawPiece(piece, '#000000');
         });
     }
+}
+
+// Global function to close the modal
+function closeModal() {
+    const modal = document.getElementById('winModal');
+    modal.style.display = 'none';
 } 
