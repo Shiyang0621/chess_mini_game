@@ -127,11 +127,13 @@ window.ChessPieces = class ChessPieces {
         // Elephant moves diagonally by 2 spaces and cannot cross the river
         const dx = Math.abs(piece.x - toX);
         const dy = Math.abs(piece.y - toY);
-        if (dx !== 2 || dy !== 2) return false;
+        if (dx !== 2 || dy !== 2) return false; // Must move exactly 2 spaces diagonally
+
         const midX = (piece.x + toX) / 2;
         const midY = (piece.y + toY) / 2;
         // Check if path is blocked
         if (this.getPieceAt(midX, midY)) return false;
+
         // Check river crossing
         return piece.color === 'red' ? toY >= 5 : toY <= 4;
     }
@@ -224,23 +226,42 @@ window.ChessPieces = class ChessPieces {
     }
 
     capturePiece(piece) {
-        // Add animation for capturing a piece
         const pieceArray = piece.color === 'red' ? this.pieces.red : this.pieces.black;
         const index = pieceArray.findIndex(p => p.x === piece.x && p.y === piece.y);
         if (index !== -1) {
-            // Remove piece immediately for win check
             pieceArray.splice(index, 1);
-            
-            // Simple fade-out animation
+
+            // 3D-like fade-out and shrink effect
             const capturedPiece = piece;
             let opacity = 1;
-            const fadeOut = setInterval(() => {
+            let scale = 1;
+            let shadowOffset = 0;
+            const centerX = capturedPiece.x * this.cellSize + this.startX;
+            const centerY = capturedPiece.y * this.cellSize + this.startY;
+            const fadeOutEffect = setInterval(() => {
                 opacity -= 0.1;
+                scale -= 0.05;
+                shadowOffset += 1; // Increase shadow offset for depth effect
+                this.ctx.save();
                 this.ctx.globalAlpha = opacity;
+                this.ctx.translate(centerX, centerY);
+                this.ctx.scale(scale, scale);
+                this.ctx.translate(-centerX, -centerY);
+
+                // Draw shadow for 3D effect
+                this.ctx.shadowOffsetX = shadowOffset;
+                this.ctx.shadowOffsetY = shadowOffset;
+                this.ctx.shadowBlur = 10;
+                this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+
                 this.drawPiece(capturedPiece, piece.color === 'red' ? '#ff0000' : '#000000');
+                this.ctx.restore();
                 if (opacity <= 0) {
-                    clearInterval(fadeOut);
+                    clearInterval(fadeOutEffect);
                     this.ctx.globalAlpha = 1;
+                    this.ctx.shadowOffsetX = 0;
+                    this.ctx.shadowOffsetY = 0;
+                    this.ctx.shadowBlur = 0;
                     this.board.drawBoard();
                     this.checkWinCondition(); // Check win condition after animation
                 }
@@ -265,6 +286,7 @@ window.ChessPieces = class ChessPieces {
         const winMessage = document.getElementById('winMessage');
         winMessage.textContent = message;
         modal.style.display = 'block';
+        modal.classList.add('show'); // Add class for animation
     }
 
     endGame() {
